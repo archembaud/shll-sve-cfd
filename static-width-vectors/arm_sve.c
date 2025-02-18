@@ -76,21 +76,15 @@ void Compute_U_from_P() {
     int vector;
     // Create SVE pointers which point to our aligned memory space
     svfloat32_t *vec_p0, *vec_p1, *vec_p2, *vec_u0, *vec_u1, *vec_u2;
-    // Create temporary pointers to help us avoid pointer arithmetic with sve types
-    float *temp_p0, *temp_p1, *temp_p2, *temp_u0, *temp_u1, *temp_u2;
     // Create some constants
     svfloat32_t HALF = svdup_f32(0.5); svfloat32_t ONE = svdup_f32(1.0);
     svfloat32_t CV = svdup_f32((R/(GAMMA-1.0)));
     svfloat32_t T_CV; svfloat32_t KE; svfloat32_t T_CV_KE;
     // printf("Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
     for (vector = 0; vector < no_vectors; vector++) {
-        // printf("Vector %d of %d\n", vector, no_vectors-1);
-        // Perform pointer arithmetic on floats; this is permitted in GCC extensions
-        temp_p0 = (float*)p0+(vector*4); temp_p1 = (float*)p1+(vector*4); temp_p2 = (float*)p2+(vector*4);
-        temp_u0 = (float*)u0+(vector*4); temp_u1 = (float*)u1+(vector*4); temp_u2 = (float*)u2+(vector*4);
         // Now we can point our sve float types at these temp pointers
-        vec_p0 = (svfloat32_t*)temp_p0; vec_p1 = (svfloat32_t*)temp_p1; vec_p2 = (svfloat32_t*)temp_p2;
-        vec_u0 = (svfloat32_t*)temp_u0; vec_u1 = (svfloat32_t*)temp_u1; vec_u2 = (svfloat32_t*)temp_u2;
+        vec_p0 = (svfloat32_t*)((float*)p0+(vector*4)); vec_p1 = (svfloat32_t*)((float*)p1+(vector*4)); vec_p2 = (svfloat32_t*)((float*)p2+(vector*4));
+        vec_u0 = (svfloat32_t*)((float*)u0+(vector*4)); vec_u1 = (svfloat32_t*)((float*)u1+(vector*4)); vec_u2 = (svfloat32_t*)((float*)u2+(vector*4));
         // Now we can start - compute U from P Euler Equations Density
         *vec_u0 = svmul_f32_m(svptrue_b32(), *vec_p0, ONE);
         // Momentum
@@ -122,13 +116,6 @@ void Update_U_from_F() {
     svfloat32_t *vec_fm0, *vec_fm1, *vec_fm2;
     svfloat32_t *vec_fR0, *vec_fR1, *vec_fR2;
     svfloat32_t *vec_fL0, *vec_fL1, *vec_fL2;
-
-    // Create temporary pointers to help us avoid pointer arithmetic with sve types
-    float *temp_u0, *temp_u1, *temp_u2;
-    float *temp_fp0, *temp_fp1, *temp_fp2;
-    float *temp_fm0, *temp_fm1, *temp_fm2;
-    float *temp_fR0, *temp_fR1, *temp_fR2;
-    float *temp_fL0, *temp_fL1, *temp_fL2;
 
     // Create some constants
     svfloat32_t DT_DX = svdup_f32(DT_ON_DX);
@@ -171,17 +158,12 @@ void Update_U_from_F() {
     // Update the state
     // dU = dU - PHI*(FP - FM + FR - FL)
     for (vector = 0; vector < no_vectors; vector++) {    
-        temp_u0 = (float*)u0+(vector*4); temp_u1 = (float*)u1+(vector*4); temp_u2 = (float*)u2+(vector*4);
-        temp_fp0 = (float*)fp0+(vector*4); temp_fp1 = (float*)fp1+(vector*4); temp_fp2 = (float*)fp2+(vector*4);
-        temp_fm0 = (float*)fm0+(vector*4); temp_fm1 = (float*)fm1+(vector*4); temp_fm2 = (float*)fm2+(vector*4);
-        temp_fR0 = (float*)Right_f0+(vector*4); temp_fR1 = (float*)Right_f1+(vector*4); temp_fR2 = (float*)Right_f2+(vector*4);
-        temp_fL0 = (float*)Left_f0+(vector*4); temp_fL1 = (float*)Left_f1+(vector*4); temp_fL2 = (float*)Left_f2+(vector*4);
-
-        vec_u0 = (svfloat32_t*)temp_u0; vec_u1 = (svfloat32_t*)temp_u1; vec_u2 = (svfloat32_t*)temp_u2;
-        vec_fp0 = (svfloat32_t*)temp_fp0; vec_fp1 = (svfloat32_t*)temp_fp1; vec_fp2 = (svfloat32_t*)temp_fp2;
-        vec_fm0 = (svfloat32_t*)temp_fm0; vec_fm1 = (svfloat32_t*)temp_fm1; vec_fm2 = (svfloat32_t*)temp_fm2;
-        vec_fR0 = (svfloat32_t*)temp_fR0; vec_fR1 = (svfloat32_t*)temp_fR1; vec_fR2 = (svfloat32_t*)temp_fR2;
-        vec_fL0 = (svfloat32_t*)temp_fL0; vec_fL1 = (svfloat32_t*)temp_fL1; vec_fL2 = (svfloat32_t*)temp_fL2;
+        // Map SVE pointers onto their respective floating point arrays
+        vec_u0 = (svfloat32_t*)((float*)u0+(vector*4)); vec_u1 = (svfloat32_t*)((float*)u1+(vector*4)); vec_u2 = (svfloat32_t*)((float*)u2+(vector*4));
+        vec_fp0 = (svfloat32_t*)((float*)fp0+(vector*4)); vec_fp1 = (svfloat32_t*)((float*)fp1+(vector*4)); vec_fp2 = (svfloat32_t*)((float*)fp2+(vector*4));
+        vec_fm0 = (svfloat32_t*)((float*)fm0+(vector*4)); vec_fm1 = (svfloat32_t*)((float*)fm1+(vector*4)); vec_fm2 = (svfloat32_t*)((float*)fm2+(vector*4));
+        vec_fR0 = (svfloat32_t*)((float*)Right_f0+(vector*4)); vec_fR1 = (svfloat32_t*)((float*)Right_f1+(vector*4)); vec_fR2 = (svfloat32_t*)((float*)Right_f2+(vector*4));
+        vec_fL0 = (svfloat32_t*)((float*)Left_f0+(vector*4)); vec_fL1 = (svfloat32_t*)((float*)Left_f1+(vector*4)); vec_fL2 = (svfloat32_t*)((float*)Left_f2+(vector*4));
 
         // Update the state
         SUM_FLUXES =  svsub_f32_m(svptrue_b32(), *vec_fp0, *vec_fm0);
@@ -211,10 +193,6 @@ void Compute_F_from_P() {
     svfloat32_t *vec_a;
     svfloat32_t *vec_p0, *vec_p1, *vec_p2, *vec_u0, *vec_u1, *vec_u2, *vec_f0, *vec_f1, *vec_f2;
     svfloat32_t *vec_fp0, *vec_fp1, *vec_fp2, *vec_fm0, *vec_fm1, *vec_fm2;
-    // Create temporary pointers to help us avoid pointer arithmetic with sve types
-    float *temp_p0, *temp_p1, *temp_p2, *temp_u0, *temp_u1, *temp_u2, *temp_f0, *temp_f1, *temp_f2;
-    float *temp_fp0, *temp_fp1, *temp_fp2, *temp_fm0, *temp_fm1, *temp_fm2;
-    float *temp_a;
     // Create some constants
     svfloat32_t HALF = svdup_f32(0.5); svfloat32_t ONE = svdup_f32(1.0); svfloat32_t NEG_ONE = svdup_f32(-1.0); 
     svfloat32_t CV = svdup_f32((R/(GAMMA-1.0)));
@@ -226,21 +204,13 @@ void Compute_F_from_P() {
 
     // printf("Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
     for (vector = 0; vector < no_vectors; vector++) {
-        // printf("Vector %d of %d\n", vector, no_vectors-1);
-        // Perform pointer arithmetic on floats; this is permitted in GCC extensions
-        temp_p0 = (float*)p0+(vector*4); temp_p1 = (float*)p1+(vector*4); temp_p2 = (float*)p2+(vector*4);
-        temp_u0 = (float*)u0+(vector*4); temp_u1 = (float*)u1+(vector*4); temp_u2 = (float*)u2+(vector*4);
-        temp_f0 = (float*)f0+(vector*4); temp_f1 = (float*)f1+(vector*4); temp_f2 = (float*)f2+(vector*4);
-        temp_fp0 = (float*)fp0+(vector*4); temp_fp1 = (float*)fp1+(vector*4); temp_fp2 = (float*)fp2+(vector*4);
-        temp_fm0 = (float*)fm0+(vector*4); temp_fm1 = (float*)fm1+(vector*4); temp_fm2 = (float*)fm2+(vector*4);
-        temp_a = (float*)a+(vector*4);
         // Now we can point our sve float types at these temp pointers
-        vec_p0 = (svfloat32_t*)temp_p0; vec_p1 = (svfloat32_t*)temp_p1; vec_p2 = (svfloat32_t*)temp_p2;
-        vec_u0 = (svfloat32_t*)temp_u0; vec_u1 = (svfloat32_t*)temp_u1; vec_u2 = (svfloat32_t*)temp_u2;
-        vec_f0 = (svfloat32_t*)temp_f0; vec_f1 = (svfloat32_t*)temp_f1; vec_f2 = (svfloat32_t*)temp_f2;
-        vec_fp0 = (svfloat32_t*)temp_fp0; vec_fp1 = (svfloat32_t*)temp_fp1; vec_fp2 = (svfloat32_t*)temp_fp2;
-        vec_fm0 = (svfloat32_t*)temp_fm0; vec_fm1 = (svfloat32_t*)temp_fm1; vec_fm2 = (svfloat32_t*)temp_fm2;
-        vec_a = (svfloat32_t*)temp_a;
+        vec_u0 = (svfloat32_t*)((float*)u0+(vector*4)); vec_u1 = (svfloat32_t*)((float*)u1+(vector*4)); vec_u2 = (svfloat32_t*)((float*)u2+(vector*4));
+        vec_p0 = (svfloat32_t*)((float*)p0+(vector*4)); vec_p1 = (svfloat32_t*)((float*)p1+(vector*4)); vec_p2 = (svfloat32_t*)((float*)p2+(vector*4));
+        vec_fp0 = (svfloat32_t*)((float*)fp0+(vector*4)); vec_fp1 = (svfloat32_t*)((float*)fp1+(vector*4)); vec_fp2 = (svfloat32_t*)((float*)fp2+(vector*4));
+        vec_fm0 = (svfloat32_t*)((float*)fm0+(vector*4)); vec_fm1 = (svfloat32_t*)((float*)fm1+(vector*4)); vec_fm2 = (svfloat32_t*)((float*)fm2+(vector*4));
+        vec_f0 = (svfloat32_t*)((float*)f0+(vector*4)); vec_f1 = (svfloat32_t*)((float*)f1+(vector*4)); vec_f2 = (svfloat32_t*)((float*)f2+(vector*4));
+        vec_a = (svfloat32_t*)((float*)a+(vector*4));
         // Probably smarter to compute a and the critical number globally
         // TODO: Complete split flux calculation
         M = svdiv_f32_m(svptrue_b32(), *vec_p1, *vec_a);
@@ -311,8 +281,6 @@ void Compute_P_from_U() {
     int vector;
     // Create SVE pointers which point to our aligned memory space
     svfloat32_t *vec_p0, *vec_p1, *vec_p2, *vec_u0, *vec_u1, *vec_u2, *vec_a;
-    // Create temporary pointers to help us avoid pointer arithmetic with sve types
-    float *temp_p0, *temp_p1, *temp_p2, *temp_u0, *temp_u1, *temp_u2, *temp_a;
     // Create some constants
     svfloat32_t HALF = svdup_f32(0.5); svfloat32_t ONE = svdup_f32(1.0);
     svfloat32_t CV = svdup_f32((R/(GAMMA-1.0)));
@@ -322,12 +290,9 @@ void Compute_P_from_U() {
     svfloat32_t GAMMA_R_T;
     // printf("Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
     for (vector = 0; vector < no_vectors; vector++) {
-        temp_p0 = (float*)p0+(vector*4); temp_p1 = (float*)p1+(vector*4); temp_p2 = (float*)p2+(vector*4);
-        temp_u0 = (float*)u0+(vector*4); temp_u1 = (float*)u1+(vector*4); temp_u2 = (float*)u2+(vector*4);
-        temp_a = (float*)a+(vector*4);
-        vec_p0 = (svfloat32_t*)temp_p0; vec_p1 = (svfloat32_t*)temp_p1; vec_p2 = (svfloat32_t*)temp_p2;
-        vec_u0 = (svfloat32_t*)temp_u0; vec_u1 = (svfloat32_t*)temp_u1; vec_u2 = (svfloat32_t*)temp_u2;
-        vec_a = (svfloat32_t*)temp_a;
+        vec_p0 = (svfloat32_t*)((float*)p0+(vector*4)); vec_p1 = (svfloat32_t*)((float*)p1+(vector*4)); vec_p2 = (svfloat32_t*)((float*)p2+(vector*4));
+        vec_u0 = (svfloat32_t*)((float*)u0+(vector*4)); vec_u1 = (svfloat32_t*)((float*)u1+(vector*4)); vec_u2 = (svfloat32_t*)((float*)u2+(vector*4));
+        vec_a = (svfloat32_t*)((float*)a+(vector*4));
 
         // Now we can start - compute U from P Euler Equations Density
         // Damn it this is a waste
@@ -363,9 +328,6 @@ void Save_Results() {
 }
 
 
-
-
-
 int main() {
     int i;
     float time = 0.0;
@@ -389,36 +351,9 @@ int main() {
     }
 
     printf("Completed in %d steps\n", NO_STEPS);
+
     // Save_Results();
 
-    printf("============ DISCONTINUITY ===============");
-    // Let's have a look at the discontinuity
-    /*
-    for (i = 124; i < 132; i++) {
-        printf("u0[%d] = %g, u1[%d] = %g, u2[%d] = %g\n", i, u0[i], i, u1[i], i, u2[i]);
-        printf("p0[%d] = %g, p1[%d] = %g, p2[%d] = %g, a[%d] = %e\n",i,  p0[i], i,  p1[i], i,  p2[i], i,  a[i]);
-        printf("fp0[%d] = %g, fp1[%d] = %g, fp2[%d] = %g\n", i, fp0[i], i,  fp1[i], i,  fp2[i], i);
-        printf("fm0[%d] = %g, fm1[%d] = %g, fm2[%d] = %g\n", i, fm0[i], i,  fm1[i], i,  fm2[i], i);
-    }
-
-    // Look at the left hand side bounds
-    printf("============ LEFT HAND BOUNDS ===============");
-    for (i = 0; i < 4; i++) {
-        printf("u0[%d] = %g, u1[%d] = %g, u2[%d] = %g\n", i, u0[i], i, u1[i], i, u2[i]);
-        printf("p0[%d] = %g, p1[%d] = %g, p2[%d] = %g, a[%d] = %e\n",i,  p0[i], i,  p1[i], i,  p2[i], i,  a[i]);
-        printf("fp0[%d] = %g, fp1[%d] = %g, fp2[%d] = %g\n", i, fp0[i], i,  fp1[i], i,  fp2[i], i);
-        printf("fm0[%d] = %g, fm1[%d] = %g, fm2[%d] = %g\n", i, fm0[i], i,  fm1[i], i,  fm2[i], i);
-    }
-
-    // Look at the right hand side bounds
-    printf("============ RIGHT HAND BOUNDS ===============");
-    for (i = N-5; i < N; i++) {
-        printf("u0[%d] = %g, u1[%d] = %g, u2[%d] = %g\n", i, u0[i], i, u1[i], i, u2[i]);
-        printf("p0[%d] = %g, p1[%d] = %g, p2[%d] = %g, a[%d] = %e\n",i,  p0[i], i,  p1[i], i,  p2[i], i,  a[i]);
-        printf("fp0[%d] = %g, fp1[%d] = %g, fp2[%d] = %g\n", i, fp0[i], i,  fp1[i], i,  fp2[i], i);
-        printf("fm0[%d] = %g, fm1[%d] = %g, fm2[%d] = %g\n", i, fm0[i], i,  fm1[i], i,  fm2[i], i);
-    }
-    */
     // Free
     Free_Memory();
 }

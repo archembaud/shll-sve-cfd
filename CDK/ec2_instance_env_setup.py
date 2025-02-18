@@ -29,9 +29,10 @@ class EC2InstanceStackSetup(Stack):
         AWS_REGION = 'us-east-2'
 
     # Get the instance size ('m8g.medium' = 1x vcpu, 'm8g.large' = 2x vcpu)
+    # Already demonstrated that m8g.large does not support 256 bit sve
     EC2_INSTANCE = os.getenv('EC2_INSTANCE')
     if not EC2_INSTANCE:
-        EC2_INSTANCE = 'm8g.large'
+        EC2_INSTANCE = 'm8g.medium'
 
     # control string
     CONTROL_STRING = 'https://eu-west-1.console.aws.amazon.com/systems-manager/session-manager/{}?region=eu-west-1'
