@@ -1,0 +1,16 @@
+{
+  "name": "cdk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "cdk": "cdk"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "aws-cdk": "^2.176.0",
+    "aws-cdk-lib": "^2.176.0"
+  }
+}

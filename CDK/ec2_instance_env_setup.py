@@ -28,10 +28,10 @@ class EC2InstanceStackSetup(Stack):
     if not AWS_REGION:
         AWS_REGION = 'us-east-2'
 
-    # Get the instance size
+    # Get the instance size ('m8g.medium' = 1x vcpu, 'm8g.large' = 2x vcpu)
     EC2_INSTANCE = os.getenv('EC2_INSTANCE')
     if not EC2_INSTANCE:
-        EC2_INSTANCE = 'm8g.medium'
+        EC2_INSTANCE = 'm8g.large'
 
     # control string
     CONTROL_STRING = 'https://eu-west-1.console.aws.amazon.com/systems-manager/session-manager/{}?region=eu-west-1'

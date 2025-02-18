@@ -1,0 +1,9 @@
+# Ignore pycache
+/CDK/__pycache__
+*.py[cod]
+
+# Ignore node modules
+CDK/node_modules/
+
+# Ignore the CDK out directory
+CDK/cdk.out
