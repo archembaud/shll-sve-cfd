@@ -7,3 +7,6 @@ CDK/node_modules/
 
 # Ignore the CDK out directory
 CDK/cdk.out
+
+# Ignore computed results
+*.dat

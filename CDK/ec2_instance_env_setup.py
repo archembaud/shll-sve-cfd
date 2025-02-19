@@ -1,11 +1,11 @@
 import os.path
 import abc
 from aws_cdk.aws_s3_assets import Asset
-
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam,
-    Stack
+    Stack,
+    aws_s3 as s3
 )
 
 from constructs import Construct
@@ -62,6 +62,8 @@ class EC2InstanceStackSetup(Stack):
         # Existing vpc from lookup
         #vpc = ec2.Vpc.from_lookup(self, "VPC", vpc_name="mantel-sve-vpc", is_default=False, region='us-east-2')
 
+        results_bucket = s3.Bucket.from_bucket_arn(self, "sve-results", "arn:aws:s3:::sve-results")
+
         # Use amazon linux 2
         amzn_linux = ec2.MachineImage.latest_amazon_linux2023(cpu_type=ec2.AmazonLinuxCpuType.ARM_64)
         # amzn_linux = ec2.MachineImage.latest_amazon_linux2(cpu_type=ec2.AmazonLinuxCpuType.ARM_64)
@@ -72,6 +74,9 @@ class EC2InstanceStackSetup(Stack):
 
         role.add_managed_policy(iam.ManagedPolicy.from_aws_managed_policy_name(
             "AmazonSSMManagedInstanceCore"))
+
+        # Make sure the instance can write to S3
+        results_bucket.grant_read_write(role)
 
         self.vpc = vpc
         self.role = role
