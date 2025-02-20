@@ -31,7 +31,7 @@ const float CFL = 0.25;
 float DT;
 float DT_ON_DX, DT_ON_DY;
 int NO_STEPS = 0;
-const float TOTAL_TIME = 0.2;
+const float TOTAL_TIME = 0.1;
 
 void Allocate_and_Init_Memory() {
     size_t alignment = 32; int i, j, cell_index;
@@ -100,7 +100,7 @@ void Allocate_and_Init_Memory() {
             cell_index++;
         }
     }
-    printf("Allocation of Memory completed\n");
+    // printf("Allocation of Memory completed\n");
 }
 
 void Free_Memory() {
@@ -129,7 +129,7 @@ void Compute_U_from_P() {
     svfloat32_t HALF = svdup_f32(0.5); svfloat32_t ONE = svdup_f32(1.0);
     svfloat32_t CV = svdup_f32((R/(GAMMA-1.0)));
     svfloat32_t T_CV;  svfloat32_t KE; svfloat32_t KE_x; svfloat32_t KE_y; svfloat32_t T_CV_KE;
-    printf("(U-from-P) - Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
+    // printf("(U-from-P) - Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
     for (vector = 0; vector < no_vectors; vector++) {
         // Now we can point our sve float types at these temp pointers
         vec_p0 = (svfloat32_t*)((float*)p0+(vector*4)); vec_p1 = (svfloat32_t*)((float*)p1+(vector*4));
@@ -159,7 +159,7 @@ void Compute_U_from_P() {
     DT = (CFL/(R+1))*DX;
     DT_ON_DX = (CFL/(R+1));
     DT_ON_DY = DT/DY;
-    printf("(U-from-P) completed\n");
+    // printf("(U-from-P) completed\n");
 }
 
 void Update_U_from_F() {
@@ -180,18 +180,18 @@ void Update_U_from_F() {
     svfloat32_t *vec_fB0, *vec_fB1, *vec_fB2, *vec_fB3;
 
     // Create some constants
-    printf("Check on DT_ON_DY: %g\n", DT_ON_DY);
+    // printf("Check on DT_ON_DY: %g\n", DT_ON_DY);
     svfloat32_t DT_DX = svdup_f32(DT_ON_DX);
     svfloat32_t DT_DY = svdup_f32(DT_ON_DY);
     svfloat32_t LEFT_FLUX, RIGHT_FLUX;
     svfloat32_t SUM_FLUXES;
-    printf("(U-from-F) Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
+    // printf("(U-from-F) Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
 
     // We shall break this down into two parts
     // i) Compute the cell left and right fluxes using serial computation, and then
     // ii) Compute the update to U based on these using SVE
     index = 0;
-    printf("Updating stencil (neighbour values)\n");
+    // printf("Updating stencil (neighbour values)\n");
     for (i = 0; i < NX; i++) {
         for (j = 0; j < NY; j++) {
 
@@ -269,7 +269,7 @@ void Update_U_from_F() {
             index++;
         }
     }
-    printf("Stencil updated - now updating state\n");
+    // printf("Stencil updated - now updating state\n");
 
 
     // Update the state
@@ -352,7 +352,7 @@ void Update_U_from_F() {
         SUM_FLUXES =  svmul_f32_m(svptrue_b32(), SUM_FLUXES, DT_DY);
         *vec_u3 = svsub_f32_m(svptrue_b32(), *vec_u3, SUM_FLUXES);
     }
-    printf("(U-from-F) Completed\n");
+    // printf("(U-from-F) Completed\n");
 }
 
 void Compute_F_from_P() {
@@ -372,7 +372,7 @@ void Compute_F_from_P() {
     svfloat32_t Z1, Z2, Z3, P;
     svfloat32_t FLUX_COMPONENT, DISSIPATIVE_COMPONENT;
 
-    printf("(F-from-P) Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
+    // printf("(F-from-P) Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
     for (vector = 0; vector < no_vectors; vector++) {
         // Now we can point our sve float types at these temp pointers
         // printf("Looking at vector %d\n", vector);
@@ -533,7 +533,7 @@ void Compute_F_from_P() {
         *vec_hm3 = svmul_f32_m(svptrue_b32(), *vec_hm3, NEG_ONE);
 
     }
-    printf("(F-from-P) Completed\n");
+    // printf("(F-from-P) Completed\n");
 }
 
 void Compute_P_from_U() {
@@ -555,7 +555,7 @@ void Compute_P_from_U() {
     svfloat32_t T_CV, KE, KE_x, KE_y, T_CV_KE;
     svfloat32_t SPECIFIC_E;
     svfloat32_t GAMMA_R_T;
-    printf("(P-from-U) Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
+    // printf("(P-from-U) Iterating over vectors of length %d, performing %d iterations\n", no_bytes, no_vectors);
     for (vector = 0; vector < no_vectors; vector++) {
         vec_p0 = (svfloat32_t*)((float*)p0+(vector*4)); vec_p1 = (svfloat32_t*)((float*)p1+(vector*4));
         vec_p2 = (svfloat32_t*)((float*)p2+(vector*4)); vec_p3 = (svfloat32_t*)((float*)p3+(vector*4));
@@ -583,7 +583,7 @@ void Compute_P_from_U() {
         // The first agument of svsqrt_f32_m is inactive; pass in 1
         *vec_a = svsqrt_f32_m(ONE, svptrue_b32(), GAMMA_R_T);
     }
-    printf("(P-from-U) Complete\n");
+    // printf("(P-from-U) Complete\n");
 }
 
 
@@ -618,8 +618,7 @@ int main() {
     Compute_P_from_U();
 
     // Take some timesteps
-    //while (time < TOTAL_TIME) {
-    for (i = 0; i < 10; i++) {
+    while (time < TOTAL_TIME) {
     // Compute split fluxes (Fp, Fm) from primitives P (i.e. density, temperature etc)
         Compute_F_from_P();
         // Update conserved quantities U based on fluxes of conserved quantities
@@ -633,7 +632,7 @@ int main() {
 
     printf("Completed in %d steps\n", NO_STEPS);
 
-    Save_Results();
+    // Save_Results();
 
     // Free
     Free_Memory();

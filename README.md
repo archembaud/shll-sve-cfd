@@ -133,3 +133,23 @@ Shown below are timing results when using the medium deployment as outlined in t
 
 Timings shown are for a twi dimensional implosion problem using a density ratio of 10 and temperature ratio of 1.
 Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is fixed at 0.25 for stability.
+
+#### Using standard C (sequential) code with the GCC compiler
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     | 205           | 1.236        |  1.234         |
+| 512 x 512     | 410           | 10.583       |  10.385      |
+| 1024 x 1024   | 820           | 91.237       |  91.935      |
+| 2048 x 2048   | 1639          | 719.181      | 720.263      |
+
+**Table 5**: Timings for maximum optimization (-O0) using the ARM C compiler and the base C code.
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     | 205           | 0.547             | 0.545        |
+| 512 x 512     | 410           | 5.945             | 6.007        |
+| 1024 x 1024   | 820           | 40.095            | 40.021       |
+| 2048 x 2048   | 1639          | 316.08            | 315.525      |
+
+**Table 5**: Timings for maximum optimization (-O3) using the ARM C compiler and the base C code.
