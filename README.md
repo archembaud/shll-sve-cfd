@@ -123,4 +123,4 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 | 32768         | 52429         | 15.926            | 15.933        |
 | 65536         | 104858        | 68.001            | 67.858        |
 
-**Table 5**: Timings for maximum optimization (-O3) using GCC v14.1 when using the base C code.
+**Table 5**: Timings for maximum optimization (-O3) using the ARM C compiler and the base C code.
