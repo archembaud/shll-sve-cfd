@@ -124,3 +124,12 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 | 65536         | 104858        | 68.001            | 67.858        |
 
 **Table 5**: Timings for maximum optimization (-O3) using the ARM C compiler and the base C code.
+
+## Timing Results
+
+Shown below are timing results when using the medium deployment as outlined in the CDK scripts.
+
+### 2D
+
+Timings shown are for a twi dimensional implosion problem using a density ratio of 10 and temperature ratio of 1.
+Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is fixed at 0.25 for stability.

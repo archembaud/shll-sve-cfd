@@ -88,14 +88,14 @@ void Allocate_and_Init_Memory() {
 
     posix_memalign((void**)&a, alignment, N*sizeof(float));
 
-    // Set up the problem - still a 1D shock tube
+    // Set up the problem - 2D implosion
     cell_index = 0;
     for (i = 0; i < NX; i++) {
         for (j = 0; j < NY; j++) {
-            if (i < 0.5*NX) {
-                p0[cell_index] = 10.0; p1[cell_index] = 0.0; p2[cell_index] = 0.0; p3[cell_index] = 1.0;
-            } else {
+            if ((i > 0.2*NX) && (i < 0.8*NX) && (j > 0.2*NY) && (j < 0.8*NY)) {
                 p0[cell_index] = 1.0; p1[cell_index] = 0.0; p2[cell_index] = 0.0; p3[cell_index] = 1.0;
+            } else {
+                p0[cell_index] = 10.0; p1[cell_index] = 0.0; p2[cell_index] = 0.0; p3[cell_index] = 1.0;
             }
             cell_index++;
         }
@@ -158,7 +158,7 @@ void Compute_U_from_P() {
     // Estimated CFL = ((R + 1)*DT)/DX;
     DT = (CFL/(R+1))*DX;
     DT_ON_DX = (CFL/(R+1));
-    DT_ON_DX = DT/DY;
+    DT_ON_DY = DT/DY;
     printf("(U-from-P) completed\n");
 }
 
@@ -180,6 +180,7 @@ void Update_U_from_F() {
     svfloat32_t *vec_fB0, *vec_fB1, *vec_fB2, *vec_fB3;
 
     // Create some constants
+    printf("Check on DT_ON_DY: %g\n", DT_ON_DY);
     svfloat32_t DT_DX = svdup_f32(DT_ON_DX);
     svfloat32_t DT_DY = svdup_f32(DT_ON_DY);
     svfloat32_t LEFT_FLUX, RIGHT_FLUX;
@@ -243,10 +244,10 @@ void Update_U_from_F() {
                 Top_f3[index] = hm3[index+1];
             } else if (j == (NY - 1)) {
                 // Bottom is fine
-                Bottom_f0[index] = hm0[index-1];
-                Bottom_f1[index] = hm1[index-1];
-                Bottom_f2[index] = hm2[index-1];
-                Bottom_f3[index] = hm3[index-1];
+                Bottom_f0[index] = hp0[index-1];
+                Bottom_f1[index] = hp1[index-1];
+                Bottom_f2[index] = hp2[index-1];
+                Bottom_f3[index] = hp3[index-1];
                 // Top is reflected in y direction
                 Top_f0[index] = -hp0[index];
                 Top_f1[index] = -hp1[index];
@@ -254,10 +255,10 @@ void Update_U_from_F() {
                 Top_f3[index] = -hp3[index];
             } else {
                 // Internal cell in y direction
-                Bottom_f0[index] = hm0[index-1];
-                Bottom_f1[index] = hm1[index-1];
-                Bottom_f2[index] = hm2[index-1];
-                Bottom_f3[index] = hm3[index-1];
+                Bottom_f0[index] = hp0[index-1];
+                Bottom_f1[index] = hp1[index-1];
+                Bottom_f2[index] = hp2[index-1];
+                Bottom_f3[index] = hp3[index-1];
                 Top_f0[index] = hm0[index+1];
                 Top_f1[index] = hm1[index+1];
                 Top_f2[index] = hm2[index+1];
@@ -281,10 +282,10 @@ void Update_U_from_F() {
         vec_fp2 = (svfloat32_t*)((float*)fp2+(vector*4)); vec_fp3 = (svfloat32_t*)((float*)fp3+(vector*4));
         vec_fm0 = (svfloat32_t*)((float*)fm0+(vector*4)); vec_fm1 = (svfloat32_t*)((float*)fm1+(vector*4));
         vec_fm2 = (svfloat32_t*)((float*)fm2+(vector*4)); vec_fm3 = (svfloat32_t*)((float*)fm3+(vector*4));
-        vec_hp0 = (svfloat32_t*)((float*)hp0+(vector*4)); vec_hp1 = (svfloat32_t*)((float*)fp1+(vector*4));
-        vec_hp2 = (svfloat32_t*)((float*)hp2+(vector*4)); vec_hp3 = (svfloat32_t*)((float*)fp3+(vector*4));
-        vec_hm0 = (svfloat32_t*)((float*)hm0+(vector*4)); vec_hm1 = (svfloat32_t*)((float*)fm1+(vector*4));
-        vec_hm2 = (svfloat32_t*)((float*)hm2+(vector*4)); vec_hm3 = (svfloat32_t*)((float*)fm3+(vector*4));
+        vec_hp0 = (svfloat32_t*)((float*)hp0+(vector*4)); vec_hp1 = (svfloat32_t*)((float*)hp1+(vector*4));
+        vec_hp2 = (svfloat32_t*)((float*)hp2+(vector*4)); vec_hp3 = (svfloat32_t*)((float*)hp3+(vector*4));
+        vec_hm0 = (svfloat32_t*)((float*)hm0+(vector*4)); vec_hm1 = (svfloat32_t*)((float*)hm1+(vector*4));
+        vec_hm2 = (svfloat32_t*)((float*)hm2+(vector*4)); vec_hm3 = (svfloat32_t*)((float*)hm3+(vector*4));
         vec_fR0 = (svfloat32_t*)((float*)Right_f0+(vector*4)); vec_fR1 = (svfloat32_t*)((float*)Right_f1+(vector*4));
         vec_fR2 = (svfloat32_t*)((float*)Right_f2+(vector*4)); vec_fR3 = (svfloat32_t*)((float*)Right_f3+(vector*4));
         vec_fL0 = (svfloat32_t*)((float*)Left_f0+(vector*4)); vec_fL1 = (svfloat32_t*)((float*)Left_f1+(vector*4));
@@ -323,6 +324,7 @@ void Update_U_from_F() {
         // Y contribution
         // printf("Computing Y contribution\n");
         // printf("Mass\n");
+
         SUM_FLUXES =  svsub_f32_m(svptrue_b32(), *vec_hp0, *vec_hm0);
         SUM_FLUXES =  svsub_f32_m(svptrue_b32(), SUM_FLUXES, *vec_fB0);
         SUM_FLUXES =  svadd_f32_m(svptrue_b32(), SUM_FLUXES, *vec_fT0);
@@ -349,7 +351,6 @@ void Update_U_from_F() {
         SUM_FLUXES =  svadd_f32_m(svptrue_b32(), SUM_FLUXES, *vec_fT3);
         SUM_FLUXES =  svmul_f32_m(svptrue_b32(), SUM_FLUXES, DT_DY);
         *vec_u3 = svsub_f32_m(svptrue_b32(), *vec_u3, SUM_FLUXES);
-
     }
     printf("(U-from-F) Completed\n");
 }
@@ -480,6 +481,7 @@ void Compute_F_from_P() {
         //printf("Eng\n");
         *vec_h3 = svadd_f32_m(svptrue_b32(), *vec_u3, P);
         *vec_h3 = svmul_f32_m(svptrue_b32(), *vec_p2, *vec_h3);
+
         //printf("Computed h - now computing split fluxes\n");
         // Probably smarter to compute a and the critical number globally
         // TODO: Complete split flux calculation
@@ -504,10 +506,10 @@ void Compute_F_from_P() {
         FLUX_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_h1, Z1);
         DISSIPATIVE_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_u1, Z2);
         *vec_hp1 = svadd_f32_m(svptrue_b32(), FLUX_COMPONENT, DISSIPATIVE_COMPONENT);
-        FLUX_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_f2, Z1);
+        FLUX_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_h2, Z1);
         DISSIPATIVE_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_u2, Z2);
         *vec_hp2 = svadd_f32_m(svptrue_b32(), FLUX_COMPONENT, DISSIPATIVE_COMPONENT);
-        FLUX_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_f3, Z1);
+        FLUX_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_h3, Z1);
         DISSIPATIVE_COMPONENT = svmul_f32_m(svptrue_b32(), *vec_u3, Z2);
         *vec_hp3 = svadd_f32_m(svptrue_b32(), FLUX_COMPONENT, DISSIPATIVE_COMPONENT);
 
@@ -617,7 +619,7 @@ int main() {
 
     // Take some timesteps
     //while (time < TOTAL_TIME) {
-    for (i = 0; i < 100; i++) {
+    for (i = 0; i < 10; i++) {
     // Compute split fluxes (Fp, Fm) from primitives P (i.e. density, temperature etc)
         Compute_F_from_P();
         // Update conserved quantities U based on fluxes of conserved quantities

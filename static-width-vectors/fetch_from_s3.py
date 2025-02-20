@@ -9,7 +9,7 @@ from matplotlib import cm
 matplotlib.use('TkAgg')
 
 # Set the date stamp
-DATE_STAMP = "19-02-25"
+DATE_STAMP = "20-02-25"
 DOWNLOAD_RESULTS = True
 
 if DOWNLOAD_RESULTS:
