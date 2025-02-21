@@ -39,6 +39,20 @@ npm run cdk synth
 npm run cdk deploy
 ```
 
+## Additional notes
+
+To create a new tmux session:
+
+```bash
+tmux new -s mysession
+```
+
+To attach to an existing session:
+
+```bash
+tmux attach -t mysession
+```
+
 ## Timing Results
 
 Shown below are timing results when using the medium deployment as outlined in the CDK scripts.
@@ -134,7 +148,7 @@ Shown below are timing results when using the medium deployment as outlined in t
 Timings shown are for a twi dimensional implosion problem using a density ratio of 10 and temperature ratio of 1.
 Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is fixed at 0.25 for stability.
 
-#### Using standard C (sequential) code with the GCC compiler
+#### Using SVE vector instrinsic code with the GCC compiler
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
 |----------------| ---------------| ----------------| ---------------| 
@@ -143,7 +157,7 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 | 1024 x 1024   | 820           | 91.237       |  91.935      |
 | 2048 x 2048   | 1639          | 719.181      | 720.263      |
 
-**Table 5**: Timings for maximum optimization (-O0) using the ARM C compiler and the base C code.
+**Table 6**: Timings for maximum optimization (-O0) using the GCC compiler and the vector instrinsic code.
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
 |----------------| ---------------| ----------------| ---------------| 
@@ -152,4 +166,24 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 | 1024 x 1024   | 820           | 40.095            | 40.021       |
 | 2048 x 2048   | 1639          | 316.08            | 315.525      |
 
-**Table 5**: Timings for maximum optimization (-O3) using the ARM C compiler and the base C code.
+**Table 7**: Timings for maximum optimization (-O3) using the GCC compiler and the vector instrinsic code.
+
+#### Using standard C code (sequential) with the GCC compiler
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     | 205           |  2.203     |   2.209       |
+| 512 x 512     | 410           |  18.863    |  19.885       |
+| 1024 x 1024   | 820           |  154.002   |  154.035     |
+| 2048 x 2048   | 1639          |  1219.093   | 1212.102    |
+
+**Table 8**: Timings for maximum optimization (-O0) using the GCC compiler and the base C code.
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     | 205           | 1.193      | 1.197        |
+| 512 x 512     | 410           | 15.120     | 14.743       |
+| 1024 x 1024   | 820           | 79.508     | 79.248       |
+| 2048 x 2048   | 1639          | 646.733    | 644.250      |
+
+**Table 9**: Timings for maximum optimization (-O3) using the GCC compiler and the base C code.
