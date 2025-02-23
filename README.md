@@ -156,7 +156,7 @@ Shown below are timing results when using the medium deployment as outlined in t
 Timings shown are for a twi dimensional implosion problem using a density ratio of 10 and temperature ratio of 1.
 Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is fixed at 0.25 for stability.
 
-#### Using SVE vector instrinsic code with the GCC compiler
+#### Using SVE vector instrinsic code with various compilers
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
 |----------------| ---------------| ----------------| ---------------| 
@@ -176,7 +176,16 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 
 **Table 7**: Timings for maximum optimization (-O3) using the GCC compiler and the vector instrinsic code.
 
-#### Using standard C code (sequential) with the GCC compiler
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     | 205           | 0.488             |   0.486      |
+| 512 x 512     | 410           | 5.545             |   5.862      |
+| 1024 x 1024   | 820           | 39.375            |   39.403     |
+| 2048 x 2048   | 1639          | 314.208           |  314.288     |
+
+**Table 8**: Timings for maximum optimization (-O3) using the ARM compiler and the vector instrinsic code.
+
+#### Using standard C code (sequential) with the various compilers
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
 |----------------| ---------------| ----------------| ---------------| 
@@ -185,7 +194,7 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 | 1024 x 1024   | 820           |  154.002   |  154.035     |
 | 2048 x 2048   | 1639          |  1219.093   | 1212.102    |
 
-**Table 8**: Timings for maximum optimization (-O0) using the GCC compiler and the base C code.
+**Table 9**: Timings for maximum optimization (-O0) using the GCC compiler and the base C code.
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
 |----------------| ---------------| ----------------| ---------------| 
@@ -194,4 +203,15 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 | 1024 x 1024   | 820           | 79.508     | 79.248       |
 | 2048 x 2048   | 1639          | 646.733    | 644.250      |
 
-**Table 9**: Timings for maximum optimization (-O3) using the GCC compiler and the base C code.
+**Table 10**: Timings for maximum optimization (-O3) using the GCC compiler and the base C code.
+
+#### Using standard C code (sequential) with ARM compiler
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     | 205           | 1.511    |  1.512      |
+| 512 x 512     | 410           | 14.182   |  13.739     |
+| 1024 x 1024   | 820           | 80.789   |  80.469     |
+| 2048 x 2048   | 1639          | 655.031    | 655.697   |
+
+**Table 11**: Timings for maximum optimization (-O3) using the ARM compiler and the base C code.
