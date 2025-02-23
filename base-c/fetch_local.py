@@ -9,8 +9,8 @@ from matplotlib import cm
 matplotlib.use('TkAgg')
 
 # Open the results file and graph some results using matplotlib
-NX = 256
-NY = 256
+NX = 1024
+NY = 1024
 data = np.genfromtxt('./results.dat')
 x = data[:,0]
 y = data[:,1]
@@ -25,7 +25,12 @@ ux_grid = ux.reshape((NX, NY))
 uy_grid = uy.reshape((NX, NY))
 T_grid = T.reshape((NX, NY))
 
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 # Plot the surface.
-surf = ax.plot_surface(x_grid, y_grid, uy_grid, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+#fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+#surf = ax.plot_surface(x_grid, y_grid, T_grid, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+#plt.show()
+
+# Contours of density
+# fig, ax = plt.subplots(subplot_kw={"projection": "2d"})
+plt.contour(x_grid, y_grid, rho_grid, levels=30)
 plt.show()
