@@ -53,6 +53,14 @@ To attach to an existing session:
 tmux attach -t mysession
 ```
 
+To select the ARM compiler:
+
+```bash
+module avail
+module load acfl/24.10.1
+module load gnu/14.2.0
+```
+
 ## Timing Results
 
 Shown below are timing results when using the medium deployment as outlined in the CDK scripts.
