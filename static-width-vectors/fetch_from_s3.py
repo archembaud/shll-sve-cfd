@@ -9,7 +9,7 @@ from matplotlib import cm
 matplotlib.use('TkAgg')
 
 # Set the date stamp
-DATE_STAMP = "20-02-25"
+DATE_STAMP = "24-02-25"
 DOWNLOAD_RESULTS = True
 
 if DOWNLOAD_RESULTS:
@@ -19,8 +19,8 @@ if DOWNLOAD_RESULTS:
     s3.meta.client.download_file('sve-results', f'{DATE_STAMP}/results.dat', './results.dat')
 
 # Open the results file and graph some results using matplotlib
-NX = 256
-NY = 256
+NX = 512
+NY = 512
 data = np.genfromtxt('./results.dat')
 x = data[:,0]
 y = data[:,1]
@@ -37,5 +37,5 @@ T_grid = T.reshape((NX, NY))
 
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 # Plot the surface.
-surf = ax.plot_surface(x_grid, y_grid, T_grid, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+surf = ax.plot_surface(x_grid, y_grid, rho_grid, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 plt.show()

@@ -215,3 +215,44 @@ Simulations are run until a dimensionless time of 0.2. The kinetic CFL number is
 | 2048 x 2048   | 1639          | 655.031    | 655.697   |
 
 **Table 11**: Timings for maximum optimization (-O3) using the ARM compiler and the base C code.
+
+### 2D (2nd order)
+
+Timings shown are for a two dimensional Euler four shock problem.
+Simulations are run until a dimensionless time of 0.8. The kinetic CFL number is fixed at 0.25 for stability.
+
+#### Using SVE vector instrinsic (2nd order) code with various compilers
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     |   1649     |  15.891       |  16.148         |
+| 512 x 512     |   3277     |  191.984      |  199.657      |
+| 1024 x 1024   |            |        |       |
+
+**Table 12** Timings for maximum optimisation (-O3) using GCC compiler with intrinsics code.
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     |   1649     |  15.039       |  14.321         |
+| 512 x 512     |   3277     |  175.403      |  190.902      |
+| 1024 x 1024   |            |        |       |
+
+**Table 13** Timings for maximum optimisation (-O3) using ARM compiler with intrinsics code.
+
+#### Using base c (2nd order) code with various compilers
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     |   1649     |         |         |
+| 512 x 512     |   3277     |       |        |
+| 1024 x 1024   |            |        |       |
+
+**Table 12** Timings for maximum optimisation (-O3) using GCC compiler with intrinsics code.
+
+| Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
+|----------------| ---------------| ----------------| ---------------| 
+| 256 x 256     |   1649     |         |          |
+| 512 x 512     |   3277     |       |        |
+| 1024 x 1024   |            |        |       |
+
+**Table 13** Timings for maximum optimisation (-O3) using ARM compiler with intrinsics code.
