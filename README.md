@@ -242,10 +242,10 @@ Simulations are run until a dimensionless time of 0.8. The kinetic CFL number is
 #### Using base c (2nd order) code with various compilers
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
-|----------------| ---------------| ----------------| ---------------| 
-| 256 x 256     |   1649     |         |         |
-| 512 x 512     |   3277     |       |        |
-| 1024 x 1024   |            |        |       |
+|----------------| ---------------| ----------------| ---------------|
+| 256 x 256     |   1649     | 26.465      |  26.270      |
+| 512 x 512     |   3277     | 321.852     |  308.381     |
+| 1024 x 1024   |   6554     | 1939.418    |  1944.395    |
 
 **Table 12** Timings for maximum optimisation (-O3) using GCC compiler with intrinsics code.
 

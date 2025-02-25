@@ -585,7 +585,7 @@ int main() {
     }
 
     printf("Completed in %d steps\n", NO_STEPS);
-    Save_Results();
+    // Save_Results();
 
     // Free
     Free_Memory();
