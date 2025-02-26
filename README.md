@@ -225,9 +225,9 @@ Simulations are run until a dimensionless time of 0.8. The kinetic CFL number is
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
 |----------------| ---------------| ----------------| ---------------| 
-| 256 x 256     |   1649     |  15.891       |  16.148         |
+| 256 x 256     |   1649     |  15.891       |  16.148       |
 | 512 x 512     |   3277     |  191.984      |  199.657      |
-| 1024 x 1024   |            |        |       |
+| 1024 x 1024   |   6554     |  1323.063     |  1320.593     |
 
 **Table 12** Timings for maximum optimisation (-O3) using GCC compiler with intrinsics code.
 
@@ -235,7 +235,7 @@ Simulations are run until a dimensionless time of 0.8. The kinetic CFL number is
 |----------------| ---------------| ----------------| ---------------| 
 | 256 x 256     |   1649     |  15.039       |  14.321         |
 | 512 x 512     |   3277     |  175.403      |  190.902      |
-| 1024 x 1024   |            |        |       |
+| 1024 x 1024   |   6554     |  1237.76      |  1237.057     |
 
 **Table 13** Timings for maximum optimisation (-O3) using ARM compiler with intrinsics code.
 
@@ -247,12 +247,12 @@ Simulations are run until a dimensionless time of 0.8. The kinetic CFL number is
 | 512 x 512     |   3277     | 321.852     |  308.381     |
 | 1024 x 1024   |   6554     | 1939.418    |  1944.395    |
 
-**Table 12** Timings for maximum optimisation (-O3) using GCC compiler with intrinsics code.
+**Table 14** Timings for maximum optimisation (-O3) using GCC compiler with the base C code.
 
 | Number of Cells | Number of Time Steps | Timing (Run A), s | Timing (Run B), s |
 |----------------| ---------------| ----------------| ---------------| 
-| 256 x 256     |   1649     |         |          |
-| 512 x 512     |   3277     |       |        |
-| 1024 x 1024   |            |        |       |
+| 256 x 256     |   1649     | 25.458     |  25.943      |
+| 512 x 512     |   3277     | 268.653    |  270.34      |
+| 1024 x 1024   |   6554     | 1908.971   |  1892.251    |
 
-**Table 13** Timings for maximum optimisation (-O3) using ARM compiler with intrinsics code.
+**Table 15** Timings for maximum optimisation (-O3) using ARM compiler with the base C code.
