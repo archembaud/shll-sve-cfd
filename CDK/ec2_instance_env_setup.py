@@ -29,7 +29,10 @@ class EC2InstanceStackSetup(Stack):
         AWS_REGION = 'us-east-2'
 
     # Get the instance size ('m8g.medium' = 1x vcpu, 'm8g.large' = 2x vcpu)
-    # Already demonstrated that m8g.large does not support 256 bit sve
+    # Already demonstrated that m8g.large does not support 256 bit sve        # c8g.large = 1 vcpu @ $0.0798 / hour
+    # c8g.4xlarge = 16 vcpus @ 0.6381 / hour (default max permitted)
+    # c8g.8xlarge = 32 vcpus @ 1.276 / hour
+    # c8g.48xlarge = 192 vcpus @ 7.657 / hour
     EC2_INSTANCE = os.getenv('EC2_INSTANCE')
     if not EC2_INSTANCE:
         EC2_INSTANCE = 'm8g.medium'

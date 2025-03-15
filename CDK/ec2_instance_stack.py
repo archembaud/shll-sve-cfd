@@ -31,7 +31,7 @@ class EC2InstanceStack(EC2InstanceStackSetup):
         # c8g.8xlarge = 32 vcpus @ 1.276 / hour
         # c8g.48xlarge = 192 vcpus @ 7.657 / hour
         instance = ec2.Instance(self, f"Instance{instance_index}",
-                                instance_type=ec2.InstanceType('c8g.large'),
+                                instance_type=ec2.InstanceType(self.EC2_INSTANCE),
                                 machine_image=amzn_linux,
                                 vpc=vpc,
                                 role=role)
