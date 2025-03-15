@@ -256,3 +256,27 @@ Simulations are run until a dimensionless time of 0.8. The kinetic CFL number is
 | 1024 x 1024   |   6554     | 1908.971   |  1892.251    |
 
 **Table 15** Timings for maximum optimisation (-O3) using ARM compiler with the base C code.
+
+#### Using OpenMP (2nd order) code with standard code and ARM C compiler
+
+Using the Euler 4 contacts problem with 1024x1024 cells.
+
+| Number of Threads | Timing, s |
+|------------| ---------------|
+| 1    |   742.31  |
+| 2    |   370.83  |
+| 4    |   186.71  |
+| 8    |   93.74   |
+| 16   |   47.39   |
+
+**Table 16** Timings for maximum optimisation (-O3) using 2nd order base OpenMP solver with ARM C compiler
+
+| Number of Threads | Timing, s |
+|------------| ---------------|
+| 1    |   493.918  |
+| 2    |   249.551  |
+| 4    |   126.59  |
+| 8    |   64.664   |
+| 16   |   33.959   |
+
+**Table 17** Timings for maximum optimisation (-O3) using 2nd order SVE + OpenMP solver with ARM compiler.

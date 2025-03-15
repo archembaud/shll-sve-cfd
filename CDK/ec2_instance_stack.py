@@ -26,29 +26,27 @@ class EC2InstanceStack(EC2InstanceStackSetup):
         return asset
 
     def define_ec2_instance(self, instance_index, vpc, amzn_linux, role, asset):
-
+        # c8g.large = 1 vcpu @ $0.0798 / hour
+        # c8g.4xlarge = 16 vcpus @ 0.6381 / hour (default max permitted)
+        # c8g.8xlarge = 32 vcpus @ 1.276 / hour
+        # c8g.48xlarge = 192 vcpus @ 7.657 / hour
         instance = ec2.Instance(self, f"Instance{instance_index}",
-                                instance_type=ec2.InstanceType(
-                                    self.EC2_INSTANCE),
+                                instance_type=ec2.InstanceType(self.EC2_INSTANCE),
                                 machine_image=amzn_linux,
                                 vpc=vpc,
                                 role=role)
-
         # Override resources
         instance.instance.add_property_override(
             self.RESOURCES_NAME, self.RESOURCES_VALUE)
-
         # # Script in S3 as Asset
         local_path = instance.user_data.add_s3_download_command(
             bucket=asset.bucket,
             bucket_key=asset.s3_object_key
         )
-
         # # Userdata executes script from S3
         instance.user_data.add_execute_file_command(
             file_path=local_path
         )
-
         # Export the value of the instance id
         instance_id = instance.instance_id
         control_string = self.CONTROL_STRING.format(instance_id)

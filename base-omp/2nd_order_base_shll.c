@@ -28,7 +28,7 @@ float *dfm0, *dfm1, *dfm2, *dfm3;
 float *dhp0, *dhp1, *dhp2, *dhp3;
 float *dhm0, *dhm1, *dhm2, *dhm3;
 const int NX = 1024;
-const int NY = 128;
+const int NY = 1024;
 const int N = NX*NY;
 const float R = 1.0;
 const float GAMMA= 1.4;
@@ -40,7 +40,7 @@ const float DY = H/NY;
 const float CFL = 0.25;
 float DT;
 float DT_ON_DX, DT_ON_DY;
-const float TOTAL_TIME = 0.2;
+const float TOTAL_TIME = 0.3;
 float alpha = 1.25;
 
 void Allocate_and_Init_Memory() {
@@ -132,6 +132,7 @@ void Allocate_and_Init_Memory() {
     posix_memalign((void**)&Top_df3, alignment, N*sizeof(float));
 
     // Set up the problem - Euler 4 shocks problem
+    /*
     cell_index = 0;
     for (i = 0; i < NX; i++) {
         for (j = 0; j < NY; j++) {
@@ -143,9 +144,9 @@ void Allocate_and_Init_Memory() {
             cell_index++;
         }
     }
+    */
 
     // Configuration 6
-    /*
     for (i = 0; i < NX; i++) {
         for (j = 0; j < NY; j++) {
             if ((i < 0.5*NX) && (j < 0.5*NY)) {
@@ -163,8 +164,7 @@ void Allocate_and_Init_Memory() {
             }
             cell_index++;
         }
-    }
-    */    
+    }   
 
 
     // 4 shocks
@@ -617,7 +617,7 @@ int main() {
     // Allocate
     Allocate_and_Init_Memory();
 
-    omp_set_num_threads(24);
+    omp_set_num_threads(16);
 
     #pragma omp parallel
     {
@@ -634,13 +634,13 @@ int main() {
             // printf("Thread %d in step %d\n", tid, NO_STEPS);
             // Compute split fluxes (Fp, Fm) from primitives P (i.e. density, temperature etc)
             Compute_F_from_P();
-            #pragma omp barrier
+            // #pragma omp barrier
             // Update conserved quantities U based on fluxes of conserved quantities
             Update_U_from_F();
-            #pragma omp barrier
+            // #pragma omp barrier
             // Update primitives based on conserved quantities (i.e. energy to temperature)
             Compute_P_from_U();
-            #pragma omp barrier
+            // #pragma omp barrier
             // Increment time
 
             time += DT;
@@ -651,7 +651,7 @@ int main() {
 
         printf("Completed in %d steps\n", NO_STEPS);
     }
-    Save_Results();
+    // Save_Results();
 
     // Free
     Free_Memory();
