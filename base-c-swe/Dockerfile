@@ -1,4 +1,4 @@
-FROM gcc:14
+FROM gcc:13
 
 # GNU time (the time package) reports wall-clock, user, and system time.
 RUN apt-get update \
