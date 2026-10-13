@@ -16,8 +16,8 @@ float *Right_f0, *Right_f1, *Right_f2;
 float *Bottom_f0, *Bottom_f1, *Bottom_f2;
 float *Top_f0, *Top_f1, *Top_f2;
 float *a;  // Wave propagation speed
-const int NX = 256;
-const int NY = 256;
+const int NX = 512;
+const int NY = 512;
 const int N = NX*NY;
 const float G = 9.81;
 const float L = 200.0;
