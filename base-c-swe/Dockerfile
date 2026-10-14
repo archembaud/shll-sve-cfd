@@ -1,9 +1,8 @@
-FROM gcc:13
+FROM alpine:latest
 
-# GNU time (the time package) reports wall-clock, user, and system time.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends time \
-    && rm -rf /var/lib/apt/lists/*
+# Install GCC and essential build dependencies
+# This will simply add the default gcc
+RUN apk add --no-cache build-base
 
 WORKDIR /workspace
 
@@ -11,4 +10,4 @@ COPY base_shll_2d.c makefile ./
 
 RUN make
 
-CMD ["/usr/bin/time", "-f", "real %e sec | user %U sec | sys %S sec", "./test.run"]
+CMD ["./test.run"]
