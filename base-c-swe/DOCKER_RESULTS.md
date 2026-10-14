@@ -26,3 +26,20 @@ Details: Intel(R) Core(TM) i7-14700HX, 32 GB RAM, using gcc:13 image (1.4GB)
 | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 | Run 6 |  Run 7 | Run 8 | AVG | Var |
 |-------|-------|-------|-------|-------|-------|--------|-------|-----|-----|
 |33.868 | 34.646| 33.818|34.622 | 34.768|33.747 |33.500  |33.269 | 34.0297 | 0.3266 | 
+
+## Native (WSL2) using MUSL
+
+Details:  Intel(R) Core(TM) i7-14700HX, 32 GB RAM, musl-gcc version 13.3.0 (based on gnu-gcc using musl backend)
+
+| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 | Run 6 |  Run 7 | Run 8 | AVG | Var |
+|-------|-------|-------|-------|-------|-------|--------|-------|-----|-----|
+| 10.732 | 11.522 | 10.893 | 11.032 | 10.849|  10.759 | 11.587 | 11.337 |  11.0889   |    0.1189   | 
+
+
+## Docker (in WSL2) using Alpine
+
+Details:  Intel(R) Core(TM) i7-14700HX, 32 GB RAM, gcc version 13.3.0 (based on musl backend in Alpine) using alpine image (289MB)
+
+| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 | Run 6 |  Run 7 | Run 8 | AVG | Var |
+|-------|-------|-------|-------|-------|-------|--------|-------|-----|-----|
+| 10.708 | 10.745 |  10.779 | 11.757 | 11.065 |  11.080 | 11.036 | 12.027 |  11.1496 | 0.2371 |

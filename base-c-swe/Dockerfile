@@ -8,6 +8,7 @@ WORKDIR /workspace
 
 COPY base_shll_2d.c makefile ./
 
-RUN make
+# Override the default musl-gcc, alpine gcc using musl by default
+RUN make CC=gcc
 
 CMD ["./test.run"]
